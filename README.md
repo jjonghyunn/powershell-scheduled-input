@@ -79,7 +79,7 @@ py -m pip install -r requirements.txt
 `scheduled_input.py` 파일 상단의 `사용자 설정` 영역만 수정합니다.
 
 ```python
-RUN_AT = "2026-10-12 21:30"
+RUN_AT = "2026-10-12 19:05"  # 예약 시각: YYYY-MM-DD HH:MM 형식. 즉시 실행하려면 ""로 비워 두세요.
 TEXT_FILE = r"C:\Users\CNXK\Downloads\리셋할일1.txt"
 WINDOW_TITLE_PREFIX = "pipeline-26-2h-"
 PRESS_ENTER = True

@@ -14,7 +14,7 @@ import win32process
 
 
 # ======================== 사용자 설정 ========================
-RUN_AT = "2026-10-12 21:30"  # 비우면 즉시 실행
+RUN_AT = "2026-10-12 19:05"  # 예약 실행 시 'YYYY-MM-DD HH:MM' 형식으로 입력하세요. 즉시 실행하려면 ""로 비워 두세요.
 TEXT_FILE = r"C:\Users\CNXK\Downloads\리셋할일1.txt"
 MESSAGE = ""  # 직접 입력하려면 TEXT_FILE을 비우고 여기에 입력
 
