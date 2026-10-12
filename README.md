@@ -2,7 +2,9 @@
 
 Windows 11 PowerShell에서 지정한 시간이 되면 대상 창을 활성화하고, 메시지 또는 TXT 파일 내용을 붙여 넣은 뒤 Enter 키를 자동으로 누르는 도구입니다.
 
-현재 릴리스 버전: **v1.0.0**
+현재 릴리스 버전: **v1.1.0**
+
+PowerShell을 직접 사용하기 어렵거나 창 제목 뒤의 식별자가 계속 바뀌는 경우에는 `scheduled_input.py`를 사용하세요. `pipeline-26-2h-abc-defg`처럼 제목이 바뀌는 창도 상단 설정의 접두사만 지정하면 찾을 수 있습니다.
 
 ## 요구 사항
 
@@ -61,3 +63,41 @@ Set-ExecutionPolicy -Scope Process Bypass
 ## 라이선스
 
 MIT License
+
+## Python 버전: 간단한 설정
+
+### 설치
+
+Windows 11에서 저장소 폴더를 연 뒤 다음 명령을 실행합니다.
+
+```powershell
+py -m pip install -r requirements.txt
+```
+
+### 설정 및 실행
+
+`scheduled_input.py` 파일 상단의 `사용자 설정` 영역만 수정합니다.
+
+```python
+RUN_AT = "2026-10-12 21:30"
+TEXT_FILE = r"C:\Users\CNXK\Downloads\리셋할일1.txt"
+WINDOW_TITLE_PREFIX = "pipeline-26-2h-"
+PRESS_ENTER = True
+```
+
+그 다음 아래 명령만 실행합니다.
+
+```powershell
+py scheduled_input.py
+```
+
+제목이 `pipeline-26-2h-abc-defg` 또는 `pipeline-26-2h-다른문자열`처럼 달라져도 `WINDOW_TITLE_PREFIX`에 지정한 부분으로 창을 찾습니다. `PROCESS_NAMES`에 지정된 PowerShell 또는 Windows Terminal 창만 대상으로 합니다.
+
+직접 메시지를 사용하려면 `TEXT_FILE`을 빈 문자열로 바꾸고 `MESSAGE`에 내용을 입력합니다.
+
+```python
+TEXT_FILE = ""
+MESSAGE = "입력할 메시지입니다."
+```
+
+Python 버전도 기본적으로 클립보드 붙여 넣기 후 Enter를 누르며, Enter를 생략하려면 `PRESS_ENTER = False`로 바꿉니다.
