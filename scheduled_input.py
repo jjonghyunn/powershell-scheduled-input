@@ -14,7 +14,7 @@ import win32process
 
 
 # ======================== 사용자 설정 ========================
-RUN_AT = "2026-10-12 19:05"  # 예약 실행 시 'YYYY-MM-DD HH:MM' 형식으로 입력하세요. 즉시 실행하려면 ""로 비워 두세요.
+RUN_AT = "2026-10-12 19:05"  # 예약 시각: YYYY-MM-DD HH:MM 형식. 즉시 실행하려면 ""로 비워 두세요.
 TEXT_FILE = r"C:\Users\CNXK\Downloads\리셋할일1.txt"
 MESSAGE = ""  # 직접 입력하려면 TEXT_FILE을 비우고 여기에 입력
 
@@ -61,14 +61,30 @@ def visible_windows() -> list[tuple[int, str, str]]:
     return found
 
 
-def wait_for_target() -> tuple[int, str, str]:
+def wait_for_target(start_hwnd: int) -> tuple[int, str, str]:
+    if not WINDOW_TITLE_PREFIX:
+        if not start_hwnd or not win32gui.IsWindow(start_hwnd):
+            raise TimeoutError("스크립트를 실행한 현재 창을 확인하지 못했습니다.")
+        return start_hwnd, win32gui.GetWindowText(start_hwnd), "current window"
+
     deadline = time.monotonic() + SEARCH_TIMEOUT_SECONDS
     while time.monotonic() < deadline:
         matches = visible_windows()
         if matches:
             return matches[0]
         time.sleep(0.5)
-    raise TimeoutError(f"대상 창을 찾지 못했습니다: {WINDOW_TITLE_PREFIX!r}")
+    visible = []
+    win32gui.EnumWindows(
+        lambda hwnd, _: visible.append(win32gui.GetWindowText(hwnd))
+        if win32gui.IsWindowVisible(hwnd) and win32gui.GetWindowText(hwnd)
+        else None,
+        None,
+    )
+    sample = ", ".join(repr(title) for title in visible[:8])
+    raise TimeoutError(
+        f"대상 창을 찾지 못했습니다: {WINDOW_TITLE_PREFIX!r}. "
+        f"현재 보이는 창 예시: {sample}"
+    )
 
 
 def paste_and_submit(hwnd: int, content: str) -> None:
@@ -93,6 +109,7 @@ def paste_and_submit(hwnd: int, content: str) -> None:
 
 
 def main() -> None:
+    start_hwnd = win32gui.GetForegroundWindow()
     content = read_content()
     if RUN_AT:
         target_time = datetime.strptime(RUN_AT, "%Y-%m-%d %H:%M")
@@ -100,7 +117,7 @@ def main() -> None:
         if seconds > 0:
             print(f"{target_time:%Y-%m-%d %H:%M}까지 대기합니다.")
             time.sleep(seconds)
-    hwnd, title, process_name = wait_for_target()
+    hwnd, title, process_name = wait_for_target(start_hwnd)
     paste_and_submit(hwnd, content)
     print(f"완료: {title} ({process_name}), {len(content)}자 입력")
 

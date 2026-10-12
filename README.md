@@ -91,7 +91,9 @@ PRESS_ENTER = True
 py scheduled_input.py
 ```
 
-제목이 `pipeline-26-2h-abc-defg` 또는 `pipeline-26-2h-다른문자열`처럼 달라져도 `WINDOW_TITLE_PREFIX`에 지정한 부분으로 창을 찾습니다. 제목 앞에 `✳ ` 같은 표시가 붙어도 작동합니다. `PROCESS_NAMES`는 기본적으로 비어 있어 제목만으로 찾으며, 필요할 때만 프로세스 필터를 추가합니다.
+제목이 `pipeline-26-2h-abc-defg` 또는 `pipeline-26-2h-다른문자열`처럼 달라져도 `WINDOW_TITLE_PREFIX`에 지정한 부분으로 창을 찾습니다. 제목 앞에 `✳ ` 같은 표시가 붙어도 작동합니다. `PROCESS_NAMES`는 기본적으로 비어 있어 제목만으로 찾습니다.
+
+`WINDOW_TITLE_PREFIX = ""`로 비워 두면 새 창을 검색하는 것이 아니라 **스크립트를 실행한 현재 창**을 대상으로 합니다. 따라서 입력 대상 PowerShell에서 스크립트를 실행한 뒤, 예약 시각을 기다리면 그 창에 입력됩니다. 별도로 연 다른 PowerShell 창을 대상으로 하려면 그 창의 실제 제목에 포함된 문자열을 `WINDOW_TITLE_PREFIX`에 지정해야 합니다. Windows Terminal의 탭 제목은 최상위 창 제목과 다를 수 있으므로, 접두사 검색이 실패하면 오류 메시지에 표시되는 실제 창 제목 예시를 확인하세요.
 
 직접 메시지를 사용하려면 `TEXT_FILE`을 빈 문자열로 바꾸고 `MESSAGE`에 내용을 입력합니다.
 
