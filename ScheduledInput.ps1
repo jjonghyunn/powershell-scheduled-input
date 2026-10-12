@@ -11,6 +11,7 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+$script:Version = '1.0.0'
 if ([string]::IsNullOrWhiteSpace($Message) -and [string]::IsNullOrWhiteSpace($TextFile)) { throw 'Specify either -Message or -TextFile.' }
 if (-not [string]::IsNullOrWhiteSpace($Message) -and -not [string]::IsNullOrWhiteSpace($TextFile)) { throw 'Use only one of -Message and -TextFile.' }
 if ([string]::IsNullOrWhiteSpace($WindowTitle) -and [string]::IsNullOrWhiteSpace($ProcessName)) { throw 'Specify -WindowTitle or -ProcessName.' }

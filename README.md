@@ -1,30 +1,63 @@
-# PowerShell Scheduled Input
+# PowerShell 예약 자동 입력 도구
 
-Windows 11 PowerShell utility that waits until a specified time, activates a target window, pastes a message or TXT file's contents, and presses Enter.
+Windows 11 PowerShell에서 지정한 시간이 되면 대상 창을 활성화하고, 메시지 또는 TXT 파일 내용을 붙여 넣은 뒤 Enter 키를 자동으로 누르는 도구입니다.
 
-## Requirements
+현재 릴리스 버전: **v1.0.0**
+
+## 요구 사항
 
 - Windows 11
-- Windows PowerShell 5.1 or PowerShell 7
-- The target application must already be open and have a visible window
+- Windows PowerShell 5.1 또는 PowerShell 7
+- 입력 대상 프로그램이 실행 중이고 화면에 보이는 창이어야 함
 
-If the target program is elevated as administrator, run this script elevated too. Windows User Interface Privilege Isolation can block input across privilege levels.
+대상 프로그램이 관리자 권한으로 실행 중이면 이 스크립트도 관리자 권한으로 실행해야 할 수 있습니다. Windows의 권한 격리 기능 때문에 일반 권한 프로그램이 관리자 권한 창에 키 입력을 보내지 못할 수 있습니다.
 
-## Examples
+## 사용 방법
+
+PowerShell에서 현재 세션에만 스크립트 실행을 허용합니다.
 
 ```powershell
 Set-ExecutionPolicy -Scope Process Bypass
-.\ScheduledInput.ps1 -At '2026-10-12 21:30' -WindowTitle 'Notepad' -Message '회의 자료를 확인해 주세요.'
 ```
+
+창 제목으로 대상 창을 찾아 메시지를 입력합니다.
+
+```powershell
+.\ScheduledInput.ps1 -At '2026-10-12 21:30' -WindowTitle '메모장' -Message '회의 자료를 확인해 주세요.'
+```
+
+프로세스 이름으로 대상을 지정하고 TXT 파일 내용을 입력합니다.
 
 ```powershell
 .\ScheduledInput.ps1 -At '2026-10-12 21:30' -ProcessName 'notepad' -TextFile '.\message.txt'
 ```
 
-Use `-NoEnter` to paste without submitting the text.
+텍스트만 붙여 넣고 Enter를 누르지 않으려면 `-NoEnter`를 추가합니다.
 
-The script temporarily uses the Windows clipboard and restores its previous text content when possible. It does not execute the text itself; targeting a shell or terminal may cause that target to interpret the pasted text.
+```powershell
+.\ScheduledInput.ps1 -At '2026-10-12 21:30' -WindowTitle '메모장' -TextFile '.\message.txt' -NoEnter
+```
 
-## License
+## 주요 매개 변수
 
-MIT
+| 매개 변수 | 설명 |
+| --- | --- |
+| `-At` | 입력할 날짜와 시간입니다. 필수입니다. |
+| `-Message` | 직접 입력할 메시지입니다. `-TextFile`과 함께 사용할 수 없습니다. |
+| `-TextFile` | 읽어 올 TXT 파일 경로입니다. `-Message`와 함께 사용할 수 없습니다. |
+| `-WindowTitle` | 활성화할 창 제목입니다. |
+| `-ProcessName` | 활성화할 프로세스 이름입니다. 예: `notepad` |
+| `-NoEnter` | 입력 후 Enter를 누르지 않습니다. |
+
+`-WindowTitle`과 `-ProcessName` 중 하나는 반드시 지정해야 합니다. 대상 창이 예약 시각에 보이지 않으면 입력하지 않고 오류를 표시합니다.
+
+## 동작 및 주의 사항
+
+- 한글, 공백, 여러 줄 TXT 내용을 지원합니다.
+- 입력에는 Windows 클립보드를 임시로 사용하고, 가능한 경우 기존 텍스트 내용을 복원합니다.
+- 스크립트가 메시지를 PowerShell 명령으로 실행하지는 않습니다. 다만 대상 창을 PowerShell이나 터미널로 지정하면 해당 프로그램이 입력 내용을 명령으로 해석할 수 있습니다.
+- 예약 시각에 다른 창이 앞에 나타나면 입력 대상이 달라질 수 있으므로 실행 중에는 대상 창의 상태를 확인하세요.
+
+## 라이선스
+
+MIT License
