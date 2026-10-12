@@ -91,7 +91,7 @@ PRESS_ENTER = True
 py scheduled_input.py
 ```
 
-제목이 `pipeline-26-2h-abc-defg` 또는 `pipeline-26-2h-다른문자열`처럼 달라져도 `WINDOW_TITLE_PREFIX`에 지정한 부분으로 창을 찾습니다. `PROCESS_NAMES`에 지정된 PowerShell 또는 Windows Terminal 창만 대상으로 합니다.
+제목이 `pipeline-26-2h-abc-defg` 또는 `pipeline-26-2h-다른문자열`처럼 달라져도 `WINDOW_TITLE_PREFIX`에 지정한 부분으로 창을 찾습니다. 제목 앞에 `✳ ` 같은 표시가 붙어도 작동합니다. `PROCESS_NAMES`는 기본적으로 비어 있어 제목만으로 찾으며, 필요할 때만 프로세스 필터를 추가합니다.
 
 직접 메시지를 사용하려면 `TEXT_FILE`을 빈 문자열로 바꾸고 `MESSAGE`에 내용을 입력합니다.
 

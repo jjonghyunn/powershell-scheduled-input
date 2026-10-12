@@ -19,7 +19,8 @@ TEXT_FILE = r"C:\Users\CNXK\Downloads\리셋할일1.txt"
 MESSAGE = ""  # 직접 입력하려면 TEXT_FILE을 비우고 여기에 입력
 
 WINDOW_TITLE_PREFIX = "pipeline-26-2h-"
-PROCESS_NAMES = {"powershell.exe", "pwsh.exe", "WindowsTerminal.exe"}
+# 비워 두면 창 제목만으로 찾습니다. 필요할 때만 프로세스 필터를 사용하세요.
+PROCESS_NAMES: set[str] = set()
 PRESS_ENTER = True
 CLIPBOARD_RESTORE = True
 SEARCH_TIMEOUT_SECONDS = 30
@@ -44,7 +45,8 @@ def visible_windows() -> list[tuple[int, str, str]]:
         if not win32gui.IsWindowVisible(hwnd):
             return
         title = win32gui.GetWindowText(hwnd)
-        if not title.startswith(WINDOW_TITLE_PREFIX):
+        # 제목 앞에 "✳ " 같은 상태 표시가 붙어도 찾을 수 있도록 포함 여부를 사용합니다.
+        if WINDOW_TITLE_PREFIX not in title:
             return
         _, pid = win32process.GetWindowThreadProcessId(hwnd)
         try:
