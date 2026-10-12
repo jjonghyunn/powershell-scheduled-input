@@ -110,7 +110,6 @@ def paste_and_submit(hwnd: int, content: str) -> None:
 
 def main() -> None:
     start_hwnd = win32gui.GetForegroundWindow()
-    content = read_content()
     if RUN_AT:
         target_time = datetime.strptime(RUN_AT, "%Y-%m-%d %H:%M")
         seconds = (target_time - datetime.now()).total_seconds()
@@ -118,6 +117,8 @@ def main() -> None:
             print(f"{target_time:%Y-%m-%d %H:%M}까지 대기합니다.")
             time.sleep(seconds)
     hwnd, title, process_name = wait_for_target(start_hwnd)
+    # 예약 대기 중 TXT가 수정될 수 있으므로 입력 직전에 다시 읽습니다.
+    content = read_content()
     paste_and_submit(hwnd, content)
     print(f"완료: {title} ({process_name}), {len(content)}자 입력")
 
